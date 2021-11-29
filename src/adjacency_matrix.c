@@ -3,8 +3,7 @@
 #include <string.h>
 
 #include "adjacency_matrix.h"
-
-#define PRINTED_MAX_CHARS(type) (3 * sizeof(type) + 1)
+#include "utilities.h"
 
 int *read_matrix(size_t size, char *str)
 {
@@ -78,4 +77,12 @@ char *adj_mat_serialise(struct AdjMat *graph)
 	p--;
 	*p = 0;
 	return ret;
+}
+
+void adj_mat_delete(struct AdjMat *graph)
+{
+	if (graph) {
+		free(graph->edges);
+		free(graph);
+	}
 }
