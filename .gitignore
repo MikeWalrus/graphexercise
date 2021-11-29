@@ -2,11 +2,17 @@
 *.lo
 *.la
 
-config.h
+compile_commands.json
 
+check_graphexercise*
+test-suite.log
+
+config.h
 /build_aux
 /.libs
 /m4
+
+/.cache
 
 # http://www.gnu.org/software/automake
 
