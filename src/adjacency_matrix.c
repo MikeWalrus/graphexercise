@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,20 +7,23 @@
 #include "adjacency_matrix.h"
 #include "utilities.h"
 
-int *read_matrix(size_t size, char *str)
+static int *read_matrix(size_t matrix_len, char *str)
 {
 	char *end_ptr = str;
-	int *edges = malloc(size * size * sizeof(*edges));
-	for (size_t i = 0; i < size; i++) {
-		for (size_t j = 0; j < size; j++) {
-			const char *next = end_ptr;
-			edges[i * size + j] = strtol(next, &end_ptr, 10);
-			if (next == end_ptr) {
+	int *edges = malloc(matrix_len * sizeof(*edges));
+	for (size_t i = 0; i < matrix_len; i++) {
+		const char *next = end_ptr;
+		edges[i] = strtol(next, &end_ptr, 10);
+		if (next == end_ptr) {
+			if (*end_ptr == '_') {
+				edges[i] = INT_MAX;
+				end_ptr++;
+			} else {
 				free(edges);
 				return NULL;
 			}
-			end_ptr++;
 		}
+		end_ptr++;
 	}
 	return edges;
 }
@@ -27,15 +31,17 @@ int *read_matrix(size_t size, char *str)
 struct AdjMat *adj_mat_deserialise(const char *str)
 {
 	char *end_ptr;
-	size_t size = strtol(str, &end_ptr, 10);
-	if (end_ptr == str || size <= 0) {
+	char *minus_sign = strchr(str, '-');
+	size_t size = strtoul(str, &end_ptr, 10);
+	if (end_ptr == str || (minus_sign && minus_sign < end_ptr)) {
 		return NULL;
 	}
 	end_ptr++;
 	if (!*end_ptr)
 		return NULL;
+	size_t matrix_len = size * size;
 
-	int *edges = read_matrix(size, end_ptr);
+	int *edges = read_matrix(matrix_len, end_ptr);
 	struct AdjMat *ret = malloc(sizeof(*ret));
 	if (!ret || !edges) {
 		free(edges);
@@ -44,6 +50,7 @@ struct AdjMat *adj_mat_deserialise(const char *str)
 	}
 	ret->size = size;
 	ret->edges = edges;
+	ret->matrix_len = matrix_len;
 	return ret;
 }
 
@@ -62,18 +69,20 @@ size_t adj_mat_try_serialise(struct AdjMat *graph, char *buf, size_t buf_len)
 
 char *adj_mat_serialise(struct AdjMat *graph)
 {
-	size_t size = graph->size;
-	size_t matrix_len = size * size;
 	size_t len = PRINTED_MAX_CHARS(size_t) + 1 +
-		     matrix_len * (PRINTED_MAX_CHARS(int) + 1);
+		     graph->matrix_len * (PRINTED_MAX_CHARS(int) + 1);
 	char *ret = malloc(len);
 	if (!ret)
 		return NULL;
 
 	char *p = ret;
 	p += sprintf(p, "%ld ", graph->size);
-	for (size_t i = 0; i < matrix_len; i++) {
-		p += sprintf(p, "%d ", graph->edges[i]);
+	for (size_t i = 0; i < graph->matrix_len; i++) {
+		if (graph->edges[i] != INT_MAX) {
+			p += sprintf(p, "%d ", graph->edges[i]);
+		} else {
+			p += sprintf(p, "_ ");
+		}
 	}
 	p--;
 	*p = 0;
@@ -92,8 +101,7 @@ bool adj_mat_is_equal(const struct AdjMat *g1, const struct AdjMat *g2)
 {
 	if (g1->size != g2->size)
 		return false;
-	size_t matrix_len = g1->size * g1->size;
-	for (size_t i = 0; i < matrix_len; i++) {
+	for (size_t i = 0; i < g1->matrix_len; i++) {
 		if (g1->edges[i] != g2->edges[i])
 			return false;
 	}
@@ -103,11 +111,33 @@ bool adj_mat_is_equal(const struct AdjMat *g1, const struct AdjMat *g2)
 struct AdjMat *adj_mat_clone(const struct AdjMat *graph)
 {
 	struct AdjMat *ret = malloc(sizeof(*ret));
-	size_t matrix_len = graph->size * graph->size;
 	*ret = (struct AdjMat){ .size = graph->size,
-				.edges = malloc(matrix_len *
+				.matrix_len = graph->matrix_len,
+				.edges = malloc(graph->matrix_len *
 						sizeof(*graph->edges)) };
-	for (size_t i = 0; i < matrix_len; i++)
+	for (size_t i = 0; i < graph->matrix_len; i++)
 		ret->edges[i] = graph->edges[i];
+	return ret;
+}
+
+struct AdjMat *
+adj_mat_from_adj_list_graph_weighted(const struct AdjListGraph *graph)
+{
+	struct AdjMat *ret = malloc(sizeof(*ret));
+	size_t size = graph->size;
+	ret->size = size;
+	ret->matrix_len = size * size;
+	ret->edges = malloc(ret->matrix_len * sizeof(*ret->edges));
+	for (size_t i = 0; i < ret->matrix_len; i++) {
+		ret->edges[i] = INT_MAX;
+	}
+	for (size_t i = 0; i < size; i++) {
+		struct Vec_edge *edges = &graph->adj_lists[i];
+		for (size_t j = 0; j < edges->size; j++) {
+			size_t to = edges->buf[j].to;
+			int weight = edges->buf[j].weight;
+			ret->edges[i * size + to] = weight;
+		}
+	}
 	return ret;
 }

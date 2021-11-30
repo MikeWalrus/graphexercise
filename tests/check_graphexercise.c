@@ -8,8 +8,8 @@
 
 const char mat_str_1[] = "5 "
 			 "0 1 0 1 1 "
-			 "1 0 1 1 0 "
-			 "0 1 0 1 1 "
+			 "1 0 2 1 0 "
+			 "0 _ _ _ 1 "
 			 "1 1 1 0 1 "
 			 "1 0 1 1 0";
 
@@ -144,6 +144,43 @@ Suite *adj_list_suite(void)
 
 struct AdjMat *adj_mat_graph;
 
+const char weighted_graph_mat_str[] = "4 "
+				      "_ 1 _ 3 "
+				      "1 _ 2 _ "
+				      "_ 2 _ 4 "
+				      "3 _ 4 _";
+const char weighted_graph_list_str[] = "4\n"
+				       "0 1 1 3 3\n"
+				       "1 0 1 2 2\n"
+				       "2 1 2 3 4\n"
+				       "3 0 3 2 4\n";
+
+START_TEST(test_mat_to_list)
+{
+	struct AdjMat *g_mat = adj_mat_deserialise(weighted_graph_mat_str);
+	ck_assert(g_mat != NULL);
+	struct AdjListGraph *g_list =
+		adj_list_graph_deserialise(weighted_graph_list_str);
+	ck_assert(g_list != NULL);
+	struct AdjMat *g_mat_from_list =
+		adj_mat_from_adj_list_graph_weighted(g_list);
+	ck_assert(adj_mat_is_equal(g_mat_from_list, g_mat));
+	adj_mat_delete(g_mat);
+	adj_mat_delete(g_mat_from_list);
+	adj_list_graph_delete(g_list);
+}
+END_TEST
+
+Suite *conversion_suite(void)
+{
+	Suite *s = suite_create("Adjacency List/Matrix Conversion");
+	TCase *tc = tcase_create("test");
+
+	tcase_add_test(tc, test_mat_to_list);
+	suite_add_tcase(s, tc);
+	return s;
+}
+
 void setup_adj_mat_graph(void)
 {
 	adj_mat_graph = adj_mat_deserialise(mat_str_1);
@@ -161,6 +198,7 @@ int main(void)
 
 	sr = srunner_create(adj_mat_suite());
 	srunner_add_suite(sr, adj_list_suite());
+	srunner_add_suite(sr, conversion_suite());
 
 	srunner_run_all(sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed(sr);
