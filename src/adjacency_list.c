@@ -1,7 +1,20 @@
+#include <limits.h>
 #include <stdio.h>
 
 #include "adjacency_list.h"
+#include "adjacency_matrix.h"
 #include "utilities.h"
+
+static struct AdjListGraph *adj_list_graph_new(size_t size)
+{
+	struct AdjListGraph *ret = malloc(sizeof(*ret));
+	ret->size = size;
+	ret->adj_lists = malloc(size * sizeof(*ret->adj_lists));
+	for (size_t i = 0; i < size; i++) {
+		ret->adj_lists[i] = vec_edge_new();
+	}
+	return ret;
+}
 
 void adj_lists_delete(struct Vec_edge *adj_lists, size_t size)
 {
@@ -29,24 +42,21 @@ struct AdjListGraph *adj_list_graph_deserialise(const char *str)
 	char *end_ptr;
 
 	size_t size = strtol(str, &end_ptr, 10);
-	if (end_ptr == str || size <= 0)
+	if (end_ptr == str)
 		return NULL;
 
-	struct Vec_edge *adj_lists = malloc(size * sizeof(*adj_lists));
-	for (size_t i = 0; i < size; i++) {
-		adj_lists[i] = vec_edge_new();
-	}
+	struct AdjListGraph *ret = adj_list_graph_new(size);
 
 	for (size_t i = 0; i < size; i++) {
 		char *next = end_ptr;
 
 		// check whether the new line begins with vertex index
 		if (i != strtol(next, &end_ptr, 10)) {
-			adj_lists_delete(adj_lists, size);
+			adj_list_graph_delete(ret);
 			return NULL;
 		}
 
-		struct Vec_edge *edges = &adj_lists[i];
+		struct Vec_edge *edges = &ret->adj_lists[i];
 		while (*end_ptr != '\n') {
 			char *next = end_ptr;
 			struct Edge edge;
@@ -54,15 +64,12 @@ struct AdjListGraph *adj_list_graph_deserialise(const char *str)
 			next = end_ptr;
 			edge.weight = strtol(next, &end_ptr, 10);
 			if (end_ptr == next) {
-				adj_lists_delete(adj_lists, size);
+				adj_list_graph_delete(ret);
 				return NULL;
 			}
 			vec_edge_push(edges, edge);
 		}
 	}
-	struct AdjListGraph *ret = malloc(sizeof(*ret));
-	ret->adj_lists = adj_lists;
-	ret->size = size;
 	return ret;
 }
 
@@ -131,6 +138,25 @@ struct AdjListGraph *adj_list_graph_clone(struct AdjListGraph *graph)
 	ret->adj_lists = malloc(graph->size * sizeof(*ret->adj_lists));
 	for (size_t i = 0; i < ret->size; i++) {
 		ret->adj_lists[i] = vec_edge_clone(&graph->adj_lists[i]);
+	}
+	return ret;
+}
+
+struct AdjListGraph *adj_list_graph_from_adj_mat_weighted(struct AdjMat *graph)
+{
+	size_t size = graph->size;
+	struct AdjListGraph *ret = adj_list_graph_new(size);
+	for (size_t i = 0; i < size; i++) {
+		struct Vec_edge *edges = &ret->adj_lists[i];
+		for (size_t j = 0; j < size; j++) {
+			int weight = graph->edges[i * size + j];
+			if (weight != INT_MAX) {
+				vec_edge_push(edges,
+					      (struct Edge){ .to = j,
+							     .weight =
+								     weight });
+			}
+		}
 	}
 	return ret;
 }

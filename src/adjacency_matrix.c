@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "adjacency_list.h"
 #include "adjacency_matrix.h"
 #include "utilities.h"
 

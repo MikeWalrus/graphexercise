@@ -155,7 +155,7 @@ const char weighted_graph_list_str[] = "4\n"
 				       "2 1 2 3 4\n"
 				       "3 0 3 2 4\n";
 
-START_TEST(test_mat_to_list)
+START_TEST(test_mat_list_conversion)
 {
 	struct AdjMat *g_mat = adj_mat_deserialise(weighted_graph_mat_str);
 	ck_assert(g_mat != NULL);
@@ -165,9 +165,15 @@ START_TEST(test_mat_to_list)
 	struct AdjMat *g_mat_from_list =
 		adj_mat_from_adj_list_graph_weighted(g_list);
 	ck_assert(adj_mat_is_equal(g_mat_from_list, g_mat));
+	struct AdjListGraph *g_list_from_mat =
+		adj_list_graph_from_adj_mat_weighted(g_mat);
+	ck_assert(g_list_from_mat != NULL);
+	ck_assert(adj_list_graph_is_equal(g_list, g_list_from_mat));
+
 	adj_mat_delete(g_mat);
 	adj_mat_delete(g_mat_from_list);
 	adj_list_graph_delete(g_list);
+	adj_list_graph_delete(g_list_from_mat);
 }
 END_TEST
 
@@ -176,7 +182,7 @@ Suite *conversion_suite(void)
 	Suite *s = suite_create("Adjacency List/Matrix Conversion");
 	TCase *tc = tcase_create("test");
 
-	tcase_add_test(tc, test_mat_to_list);
+	tcase_add_test(tc, test_mat_list_conversion);
 	suite_add_tcase(s, tc);
 	return s;
 }
