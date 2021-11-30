@@ -36,6 +36,11 @@
 		vec->buf[vec->size++] = elem;                                  \
 	}                                                                      \
                                                                                \
+	Type vec_##typename##_pop_back(struct Vec_##typename *vec)             \
+	{                                                                      \
+		return vec->buf[--vec->size];                                  \
+	}                                                                      \
+                                                                               \
 	void vec_##typename##_delete(struct Vec_##typename *vec)               \
 	{                                                                      \
 		free(vec->buf);                                                \

@@ -17,10 +17,15 @@ void test_push(struct Vec_int *v)
 	}
 }
 
-START_TEST(test_vec_push)
+START_TEST(test_vec)
 {
 	struct Vec_int v = vec_int_new();
 	test_push(&v);
+	for (size_t i = 0; i < 100; i++) {
+		int val = vec_int_pop_back(&v);
+		ck_assert_int_eq(val, 1023 - i);
+		ck_assert_uint_eq(v.size, val);
+	}
 }
 END_TEST
 
@@ -36,7 +41,7 @@ START_TEST(test_vec_with_cap_push)
 		vec_int_push(&v, 0);
 	}
 	ck_assert_uint_eq(v.capacity, 7);
-	test_push(&v);
+	vec_int_delete(&v);
 }
 END_TEST
 
@@ -49,7 +54,8 @@ Suite *vec_suite(void)
 
 	tc = tcase_create("test");
 
-	tcase_add_test(tc, test_vec_push);
+	tcase_add_test(tc, test_vec);
+	tcase_add_test(tc, test_vec_with_cap_push);
 	suite_add_tcase(s, tc);
 
 	return s;

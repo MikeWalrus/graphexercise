@@ -21,6 +21,8 @@
                                                                                \
 	void vec_##typename##_push(struct Vec_##typename *vec, Type elem);     \
                                                                                \
+	Type vec_##typename##_pop_back(struct Vec_##typename *vec);            \
+                                                                               \
 	void vec_##typename##_delete(struct Vec_##typename *vec);              \
                                                                                \
 	struct Vec_##typename vec_##                                           \
