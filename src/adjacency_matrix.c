@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -85,4 +86,28 @@ void adj_mat_delete(struct AdjMat *graph)
 		free(graph->edges);
 		free(graph);
 	}
+}
+
+bool adj_mat_is_equal(const struct AdjMat *g1, const struct AdjMat *g2)
+{
+	if (g1->size != g2->size)
+		return false;
+	size_t matrix_len = g1->size * g1->size;
+	for (size_t i = 0; i < matrix_len; i++) {
+		if (g1->edges[i] != g2->edges[i])
+			return false;
+	}
+	return true;
+}
+
+struct AdjMat *adj_mat_clone(const struct AdjMat *graph)
+{
+	struct AdjMat *ret = malloc(sizeof(*ret));
+	size_t matrix_len = graph->size * graph->size;
+	*ret = (struct AdjMat){ .size = graph->size,
+				.edges = malloc(matrix_len *
+						sizeof(*graph->edges)) };
+	for (size_t i = 0; i < matrix_len; i++)
+		ret->edges[i] = graph->edges[i];
+	return ret;
 }

@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define DECL_VEC(Type, typename)                                               \
 	struct Vec_##typename                                                  \
@@ -45,6 +46,15 @@
 	void vec_##typename##_delete(struct Vec_##typename *vec)               \
 	{                                                                      \
 		free(vec->buf);                                                \
+	}                                                                      \
+                                                                               \
+	struct Vec_##typename vec_##                                           \
+		typename##_clone(const struct Vec_##typename *vec)             \
+	{                                                                      \
+		struct Vec_##typename ret = *vec;                              \
+		ret.buf = malloc(vec->capacity * sizeof(Type));                \
+		memcpy(vec->buf, ret.buf, vec->size * sizeof(Type));           \
+		return ret;                                                    \
 	}
 
 #endif
