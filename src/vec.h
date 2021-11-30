@@ -13,48 +13,21 @@
 		Type *buf;                                                     \
 	};                                                                     \
                                                                                \
-	struct Vec_##typename vec_##typename##_new(void)                       \
-	{                                                                      \
-		return (struct Vec_##                                          \
-			typename){ .capacity = 0, .size = 0, .buf = NULL };    \
-	}                                                                      \
+	struct Vec_##typename vec_##typename##_new(void);                      \
                                                                                \
-	struct Vec_##typename vec_##typename##_with_capacity(size_t capacity)  \
-	{                                                                      \
-		return (struct Vec_##                                          \
-			typename){ .capacity = capacity,                       \
-				   .size = 0,                                  \
-				   .buf = malloc(capacity * sizeof(Type)) };   \
-	}                                                                      \
+	struct Vec_##typename vec_##typename##_with_capacity(size_t capacity); \
                                                                                \
-	void vec_##typename##_grow(struct Vec_##typename *vec)                 \
-	{                                                                      \
-		size_t new_capacity = vec->capacity * 2;                       \
-		if (vec->capacity == 0)                                        \
-			new_capacity = 2;                                      \
-		vec->buf = realloc(vec->buf, new_capacity * sizeof(Type));     \
-		vec->capacity = new_capacity;                                  \
-	}                                                                      \
+	void vec_##typename##_grow(struct Vec_##typename *vec);                \
                                                                                \
-	void vec_##typename##_push(struct Vec_##typename *vec, Type elem)      \
-	{                                                                      \
-		if (vec->size == vec->capacity)                                \
-			vec_##typename##_grow(vec);                            \
-		vec->buf[vec->size++] = elem;                                  \
-	}                                                                      \
+	void vec_##typename##_push(struct Vec_##typename *vec, Type elem);     \
                                                                                \
-	void vec_##typename##_delete(struct Vec_##typename *vec)               \
-	{                                                                      \
-		free(vec->buf);                                                \
-	}                                                                      \
+	void vec_##typename##_delete(struct Vec_##typename *vec);              \
                                                                                \
 	struct Vec_##typename vec_##                                           \
-		typename##_clone(const struct Vec_##typename *vec)             \
-	{                                                                      \
-		struct Vec_##typename ret = *vec;                              \
-		ret.buf = malloc(vec->capacity * sizeof(Type));                \
-		memcpy(vec->buf, ret.buf, vec->size * sizeof(Type));           \
-		return ret;                                                    \
-	}
+		typename##_clone(const struct Vec_##typename *vec);
+
+struct Edge;
+DECL_VEC(struct Edge, edge);
+DECL_VEC(int, int);
 
 #endif

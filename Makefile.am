@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libgraphexercise.la
 libgraphexercise_la_SOURCES = \
 							  src/adjacency_matrix.c src/adjacency_matrix.h \
 							  src/adjacency_list.c src/adjacency_list.h \
-							  src/vec.h \
+							  src/vec.c src/vec.h \
 							  src/utilities.h
 
 pkginclude_HEADERS = \

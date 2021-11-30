@@ -11,8 +11,6 @@ struct Edge {
 	int weight;
 };
 
-DECL_VEC(struct Edge, edge);
-
 struct AdjListGraph {
 	size_t size;
 	struct Vec_edge *adj_lists;
