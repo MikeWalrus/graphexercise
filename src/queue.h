@@ -15,10 +15,14 @@
 	};                                                                     \
 	size_t queue_##typename##_len(const struct Queue_##typename *queue);   \
 	struct Queue_##typename queue_##typename##_new(void);                  \
+	struct Queue_##typename queue_##                                       \
+		typename##_with_capacity(size_t capacity);                     \
 	void queue_##                                                          \
 		typename##_push(struct Queue_##typename *queue, Type elem);    \
 	Type queue_##typename##_pop_front(struct Queue_##typename *queue);     \
-	bool queue_##typename##_is_empty(const struct Queue_##typename *queue);
+	bool queue_##                                                          \
+		typename##_is_empty(const struct Queue_##typename *queue);     \
+	void queue_##typename##_delete(struct Queue_##typename *queue);
 
 DECL_QUEUE(size_t, size_t);
 DECL_QUEUE(int, int);

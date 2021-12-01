@@ -11,7 +11,8 @@ libgraphexercise_la_SOURCES = \
 
 pkginclude_HEADERS = \
 					 src/adjacency_matrix.h \
-					 src/adjacency_list.h
+					 src/adjacency_list.h \
+					 src/traverse.h
 
 TESTS = check_graphexercise check_vec check_algorithms check_queue
 check_PROGRAMS = check_graphexercise check_vec check_algorithms check_queue

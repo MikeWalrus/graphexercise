@@ -5,10 +5,32 @@
 
 #include "../src/queue.h"
 
-START_TEST(test_queue)
+START_TEST(test_queue1)
+{
+	struct Queue_int q = queue_int_new();
+	for (size_t i = 0; i < 100; i++) {
+		queue_int_push(&q, i);
+		ck_assert_uint_eq(queue_int_len(&q), i + 1);
+	}
+	for (size_t i = 0; i < 100; i++) {
+		int n = queue_int_pop_front(&q);
+		ck_assert_int_eq(n, i);
+	}
+	for (size_t i = 0; i < 100; i++) {
+		queue_int_push(&q, i);
+		ck_assert_uint_eq(queue_int_len(&q), i + 1);
+	}
+	for (size_t i = 0; i < 100; i++) {
+		int n = queue_int_pop_front(&q);
+		ck_assert_int_eq(n, i);
+	}
+	ck_assert_uint_eq(queue_int_len(&q), 0);
+}
+
+START_TEST(test_queue2)
 {
 	int n;
-	struct Queue_int q = queue_int_new();
+	struct Queue_int q = queue_int_with_capacity(1);
 	queue_int_push(&q, 200);
 	queue_int_push(&q, 100);
 	n = queue_int_pop_front(&q);
@@ -42,7 +64,8 @@ Suite *queue_suite(void)
 
 	tc = tcase_create("test");
 
-	tcase_add_test(tc, test_queue);
+	tcase_add_test(tc, test_queue1);
+	tcase_add_test(tc, test_queue2);
 	suite_add_tcase(s, tc);
 
 	return s;

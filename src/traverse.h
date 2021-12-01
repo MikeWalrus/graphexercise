@@ -6,4 +6,6 @@
 
 size_t *dfs_adj_list_graph(const struct AdjListGraph *graph, size_t *ret_size);
 
+size_t *bfs_adj_list_graph(const struct AdjListGraph *graph, size_t *ret_size);
+
 #endif

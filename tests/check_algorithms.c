@@ -58,6 +58,14 @@ void test_dfs_trace(struct AdjListGraph *graph)
 	free(trace);
 }
 
+void test_bfs_trace(struct AdjListGraph *graph)
+{
+	size_t trace_size;
+	size_t *trace = bfs_adj_list_graph(graph, &trace_size);
+	test_traversal_trace_on(graph, trace, trace_size);
+	free(trace);
+}
+
 START_TEST(test_dfs)
 {
 	struct AdjListGraph *graph;
@@ -74,17 +82,34 @@ START_TEST(test_dfs)
 }
 END_TEST
 
+START_TEST(test_bfs)
+{
+	struct AdjListGraph *graph;
+	graph = adj_list_graph_deserialise("4\n"
+					   "0 1 0 2 0 3 0\n"
+					   "1 0 0 2 0 3 0\n"
+					   "2 0 0 1 0\n"
+					   "3\n");
+	test_bfs_trace(graph);
+	adj_list_graph_delete(graph);
+	graph = graph_load(DATASET_DIR "lastfm_adj_list.txt");
+	test_bfs_trace(graph);
+	adj_list_graph_delete(graph);
+}
+END_TEST
+
 Suite *adj_list_suite(void)
 {
 	Suite *s;
-	TCase *tc_mat;
+	TCase *tc;
 
 	s = suite_create("Algorithms");
 
-	tc_mat = tcase_create("test");
+	tc = tcase_create("test");
 
-	tcase_add_test(tc_mat, test_dfs);
-	suite_add_tcase(s, tc_mat);
+	tcase_add_test(tc, test_dfs);
+	tcase_add_test(tc, test_bfs);
+	suite_add_tcase(s, tc);
 
 	return s;
 }
