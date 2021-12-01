@@ -7,12 +7,12 @@
 
 void test_push(struct Vec_int *v)
 {
-	for (int i = 0; i < 100000; i++) {
+	for (int i = 0; i < 1024; i++) {
 		vec_int_push(v, i);
 		ck_assert_uint_eq(v->size, i + 1);
 		ck_assert_uint_le(v->size, v->capacity);
 	}
-	for (size_t i = 0; i < 100000; i++) {
+	for (size_t i = 0; i < 1024; i++) {
 		ck_assert_int_eq(v->buf[i], i);
 	}
 }
@@ -23,7 +23,7 @@ START_TEST(test_vec)
 	test_push(&v);
 	for (size_t i = 0; i < 100; i++) {
 		int val = vec_int_pop_back(&v);
-		ck_assert_int_eq(val, 99999 - i);
+		ck_assert_int_eq(val, 1023 - i);
 		ck_assert_uint_eq(v.size, val);
 	}
 	vec_int_delete(&v);

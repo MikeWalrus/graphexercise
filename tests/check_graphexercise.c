@@ -92,10 +92,11 @@ START_TEST(test_adj_list_graph_deserialise)
 	char *serialised = adj_list_graph_serialise(g);
 	ck_assert_str_eq(serialised, adj_list_str_1);
 	free(serialised);
-
 	adj_list_graph_delete(g);
-	adj_list_graph_deserialise("1\n0 1 0\n");
+
+	g = adj_list_graph_deserialise("1\n0 1 0\n");
 	ck_assert(g != NULL);
+	adj_list_graph_delete(g);
 }
 END_TEST
 
@@ -126,6 +127,7 @@ START_TEST(test_adj_list_graph_equality)
 
 	adj_list_graph_delete(g);
 	adj_list_graph_delete(g1);
+	adj_list_graph_delete(g2);
 	adj_list_graph_delete(g_clone);
 }
 END_TEST

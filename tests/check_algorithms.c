@@ -55,6 +55,7 @@ void test_dfs_trace(struct AdjListGraph *graph)
 	size_t trace_size;
 	size_t *trace = dfs_adj_list_graph(graph, &trace_size);
 	test_traversal_trace_on(graph, trace, trace_size);
+	free(trace);
 }
 
 START_TEST(test_dfs)

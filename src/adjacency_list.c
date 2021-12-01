@@ -78,6 +78,7 @@ void adj_list_graph_delete(struct AdjListGraph *graph)
 	if (graph) {
 		adj_lists_delete(graph->adj_lists, graph->size);
 	}
+	free(graph);
 }
 
 char *adj_list_graph_serialise(struct AdjListGraph *graph)
