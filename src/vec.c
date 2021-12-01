@@ -57,3 +57,4 @@
 
 IMPL_VEC(struct Edge, edge);
 IMPL_VEC(int, int);
+IMPL_VEC(size_t, size_t);

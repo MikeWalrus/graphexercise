@@ -31,5 +31,6 @@
 struct Edge;
 DECL_VEC(struct Edge, edge);
 DECL_VEC(int, int);
+DECL_VEC(size_t, size_t);
 
 #endif
