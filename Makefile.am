@@ -7,15 +7,18 @@ libgraphexercise_la_SOURCES = \
 							  src/vec.c src/vec.h \
 							  src/queue.c src/queue.h \
 							  src/utilities.h \
-							  src/traverse.c src/traverse.h
+							  src/traverse.c src/traverse.h \
+							  src/priority_queue.c src/priority_queue.h
 
 pkginclude_HEADERS = \
 					 src/adjacency_matrix.h \
 					 src/adjacency_list.h \
 					 src/traverse.h
 
-TESTS = check_graphexercise check_vec check_algorithms check_queue
-check_PROGRAMS = check_graphexercise check_vec check_algorithms check_queue
+TESTS = check_graphexercise check_vec check_algorithms check_queue \
+		check_priority_queue
+check_PROGRAMS = check_graphexercise check_vec check_algorithms check_queue \
+				 check_priority_queue
 
 
 
@@ -34,5 +37,9 @@ check_queue_LDADD = libgraphexercise.la @CHECK_LIBS@
 check_algorithms_SOURCES = tests/check_algorithms.c
 check_algorithms_CFLAGS = @CHECK_CFLAGS@ -DDATASET_DIR="\"$(abs_top_srcdir)/tests/datasets/\""
 check_algorithms_LDADD = libgraphexercise.la @CHECK_LIBS@
+
+check_priority_queue_SOURCES = tests/check_priority_queue.c
+check_priority_queue_CFLAGS = @CHECK_CFLAGS@
+check_priority_queue_LDADD = libgraphexercise.la @CHECK_LIBS@
 
 EXTRA_DIST = tests/datasets

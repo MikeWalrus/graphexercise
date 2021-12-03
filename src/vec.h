@@ -2,8 +2,6 @@
 #define _VEC_H
 
 #include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define DECL_VEC(Type, typename)                                               \
 	struct Vec_##typename                                                  \

@@ -1,5 +1,6 @@
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "adjacency_list.h"
 #include "adjacency_matrix.h"
