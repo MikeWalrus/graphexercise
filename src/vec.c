@@ -9,15 +9,15 @@
 	struct Vec_##typename vec_##typename##_new(void)                       \
 	{                                                                      \
 		return (struct Vec_##                                          \
-			typename){ .capacity = 0, .size = 0, .buf = NULL };    \
+		        typename){ .capacity = 0, .size = 0, .buf = NULL };    \
 	}                                                                      \
                                                                                \
 	struct Vec_##typename vec_##typename##_with_capacity(size_t capacity)  \
 	{                                                                      \
 		return (struct Vec_##                                          \
-			typename){ .capacity = capacity,                       \
-				   .size = 0,                                  \
-				   .buf = malloc(capacity * sizeof(Type)) };   \
+		        typename){ .capacity = capacity,                       \
+			           .size = 0,                                  \
+			           .buf = malloc(capacity * sizeof(Type)) };   \
 	}                                                                      \
                                                                                \
 	void vec_##typename##_grow(struct Vec_##typename *vec)                 \

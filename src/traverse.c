@@ -6,7 +6,7 @@
 #include "traverse.h"
 
 static void dfs_adj_list_graph_aux(const struct AdjListGraph *graph,
-				   size_t from, size_t **trace, bool *visited);
+                                   size_t from, size_t **trace, bool *visited);
 
 size_t *dfs_adj_list_graph(const struct AdjListGraph *graph, size_t *ret_size)
 {
@@ -28,7 +28,7 @@ size_t *dfs_adj_list_graph(const struct AdjListGraph *graph, size_t *ret_size)
 }
 
 static void dfs_adj_list_graph_aux(const struct AdjListGraph *graph,
-				   size_t from, size_t **trace, bool *visited)
+                                   size_t from, size_t **trace, bool *visited)
 {
 	size_t *p = *trace;
 	visited[from] = true;
@@ -55,7 +55,7 @@ static void dfs_adj_list_graph_aux(const struct AdjListGraph *graph,
 }
 
 static void bfs_adj_list_graph_aux(const struct AdjListGraph *graph,
-				   size_t from, size_t **trace, bool *visited);
+                                   size_t from, size_t **trace, bool *visited);
 
 size_t *bfs_adj_list_graph(const struct AdjListGraph *graph, size_t *ret_size)
 {
@@ -77,7 +77,7 @@ size_t *bfs_adj_list_graph(const struct AdjListGraph *graph, size_t *ret_size)
 }
 
 static void bfs_adj_list_graph_aux(const struct AdjListGraph *graph,
-				   size_t from, size_t **trace, bool *visited)
+                                   size_t from, size_t **trace, bool *visited)
 {
 	size_t *p = *trace;
 	visited[from] = true;

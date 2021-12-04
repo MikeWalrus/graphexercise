@@ -62,7 +62,7 @@ size_t adj_mat_try_serialise(struct AdjMat *graph, char *buf, size_t buf_len)
 	for (size_t i = 0; i < graph->size; i++) {
 		for (size_t j = 0; j < graph->size; j++) {
 			len += snprintf(NULL, 0, "%d ",
-					graph->edges[i * graph->size + j]);
+			                graph->edges[i * graph->size + j]);
 		}
 	}
 	return len;
@@ -71,7 +71,7 @@ size_t adj_mat_try_serialise(struct AdjMat *graph, char *buf, size_t buf_len)
 char *adj_mat_serialise(struct AdjMat *graph)
 {
 	size_t len = PRINTED_MAX_CHARS(size_t) + 1 +
-		     graph->matrix_len * (PRINTED_MAX_CHARS(int) + 1);
+	             graph->matrix_len * (PRINTED_MAX_CHARS(int) + 1);
 	char *ret = malloc(len);
 	if (!ret)
 		return NULL;
@@ -113,9 +113,9 @@ struct AdjMat *adj_mat_clone(const struct AdjMat *graph)
 {
 	struct AdjMat *ret = malloc(sizeof(*ret));
 	*ret = (struct AdjMat){ .size = graph->size,
-				.matrix_len = graph->matrix_len,
-				.edges = malloc(graph->matrix_len *
-						sizeof(*graph->edges)) };
+		                .matrix_len = graph->matrix_len,
+		                .edges = malloc(graph->matrix_len *
+		                                sizeof(*graph->edges)) };
 	for (size_t i = 0; i < graph->matrix_len; i++)
 		ret->edges[i] = graph->edges[i];
 	return ret;

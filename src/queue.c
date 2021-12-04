@@ -43,7 +43,7 @@
 		size_t old_capacity = queue->capacity;                         \
 		size_t new_capacity = old_capacity * 2;                        \
 		queue->buf = realloc(queue->buf,                               \
-				     new_capacity * sizeof(*queue->buf));      \
+		                     new_capacity * sizeof(*queue->buf));      \
                                                                                \
 		/*  If [..head..tail..] then no need to copy. */               \
 		/*  [..tail..head..] */                                        \

@@ -88,9 +88,9 @@ char *adj_list_graph_serialise(struct AdjListGraph *graph)
 	max_len += PRINTED_MAX_CHARS(size_t) + 1;
 	for (size_t i = 0; i < graph->size; i++) {
 		max_len += PRINTED_MAX_CHARS(size_t) + 1 +
-			   (PRINTED_MAX_CHARS(size_t) + 1 +
-			    PRINTED_MAX_CHARS(int) + 1) *
-				   graph->adj_lists[i].size;
+		           (PRINTED_MAX_CHARS(size_t) + 1 +
+		            PRINTED_MAX_CHARS(int) + 1) *
+		                   graph->adj_lists[i].size;
 	}
 	max_len++;
 	char *ret = malloc(max_len);
@@ -154,9 +154,9 @@ struct AdjListGraph *adj_list_graph_from_adj_mat_weighted(struct AdjMat *graph)
 			int weight = graph->edges[i * size + j];
 			if (weight != INT_MAX) {
 				vec_edge_push(edges,
-					      (struct Edge){ .to = j,
-							     .weight =
-								     weight });
+				              (struct Edge){ .to = j,
+				                             .weight =
+				                                     weight });
 			}
 		}
 	}

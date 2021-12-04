@@ -52,19 +52,19 @@ END_TEST
 START_TEST(test_priority_queue)
 {
 	size_t indices_list[] = { 34, 5,  2,  98, 99, 55, 6,  23, 48,
-				  1,  88, 45, 8,  77, 43, 26, 82, 21 };
+		                  1,  88, 45, 8,  77, 43, 26, 82, 21 };
 	size_t len = sizeof(indices_list) / sizeof(*indices_list);
 	for (size_t i = 0; i < len; i++) {
 		bool improved;
 		bool result = priority_queue_decrese_key(&q, indices_list[i], i,
-							 &improved);
+		                                         &improved);
 		ck_assert(result == true);
 		ck_assert(improved);
 	}
 	for (size_t i = 0; i < len; i++) {
 		bool improved;
 		bool result = priority_queue_decrese_key(&q, indices_list[i], i,
-							 &improved);
+		                                         &improved);
 		ck_assert(result == true);
 		ck_assert(!improved);
 	}

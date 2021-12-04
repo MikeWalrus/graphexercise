@@ -32,7 +32,7 @@ struct AdjListGraph *graph_load(const char *filename)
 }
 
 void test_traversal_trace_on(struct AdjListGraph *graph, size_t *trace,
-			     size_t trace_size)
+                             size_t trace_size)
 {
 	ck_assert_uint_eq(trace_size, graph->size);
 	bool *visited = malloc(sizeof(*visited) * graph->size);
@@ -70,10 +70,10 @@ START_TEST(test_dfs)
 {
 	struct AdjListGraph *graph;
 	graph = adj_list_graph_deserialise("4\n"
-					   "0 1 0 2 0 3 0\n"
-					   "1 0 0 2 0 3 0\n"
-					   "2 0 0 1 0\n"
-					   "3\n");
+	                                   "0 1 0 2 0 3 0\n"
+	                                   "1 0 0 2 0 3 0\n"
+	                                   "2 0 0 1 0\n"
+	                                   "3\n");
 	test_dfs_trace(graph);
 	adj_list_graph_delete(graph);
 	graph = graph_load(DATASET_DIR "lastfm_adj_list.txt");
@@ -86,10 +86,10 @@ START_TEST(test_bfs)
 {
 	struct AdjListGraph *graph;
 	graph = adj_list_graph_deserialise("4\n"
-					   "0 1 0 2 0 3 0\n"
-					   "1 0 0 2 0 3 0\n"
-					   "2 0 0 1 0\n"
-					   "3\n");
+	                                   "0 1 0 2 0 3 0\n"
+	                                   "1 0 0 2 0 3 0\n"
+	                                   "2 0 0 1 0\n"
+	                                   "3\n");
 	test_bfs_trace(graph);
 	adj_list_graph_delete(graph);
 	graph = graph_load(DATASET_DIR "lastfm_adj_list.txt");

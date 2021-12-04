@@ -22,7 +22,7 @@ struct PriorityQueue priority_queue_new(size_t size)
 
 	for (size_t i = 1; i <= size; i++) {
 		ret.heap[i] = (struct VertexPair){ .index = i - 1,
-						   .weight = INT_MAX };
+			                           .weight = INT_MAX };
 	}
 
 	return ret;
@@ -35,13 +35,13 @@ void priority_queue_delete(struct PriorityQueue *q)
 }
 
 static inline void update_internal_index(struct PriorityQueue *q, size_t old,
-					 size_t new)
+                                         size_t new)
 {
 	q->indices[q->heap[old].index] = new;
 }
 
 static inline void move_in_heap(struct PriorityQueue *q, size_t src_index,
-				size_t dst_index)
+                                size_t dst_index)
 {
 	update_internal_index(q, src_index, dst_index);
 	q->heap[dst_index] = q->heap[src_index];
@@ -61,7 +61,7 @@ static void down_heap(struct PriorityQueue *q, size_t internal_index)
 		j = i * 2; // left child
 		if (j < size /* have right child */ &&
 		    heap[j].weight >
-			    heap[j + 1].weight /* right child is smaller */)
+		            heap[j + 1].weight /* right child is smaller */)
 			j++; // right child
 		if (weight <= heap[j].weight) // shouldn't go further
 			break; // now heap[i] is the place we want to place `elem` in
@@ -98,7 +98,7 @@ static void up_heap(struct PriorityQueue *q, size_t internal_index)
 }
 
 bool priority_queue_decrese_key(struct PriorityQueue *q, size_t index,
-				int new_weight, bool *improved)
+                                int new_weight, bool *improved)
 {
 	if (q->indices[index] == NOT_IN_HEAP)
 		return false;

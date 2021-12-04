@@ -30,16 +30,16 @@ START_TEST(test_adj_mat_deserialise_invalid)
 {
 	struct AdjMat *m = adj_mat_deserialise("1"); // (no matrix)
 	ck_assert_msg(m == NULL,
-		      "Should be invalid because there is no matrix.");
+	              "Should be invalid because there is no matrix.");
 	m = adj_mat_deserialise("1 "); // (with trailing space)
 	ck_assert_msg(m == NULL,
-		      "Should be invalid because there is no matrix.");
+	              "Should be invalid because there is no matrix.");
 	m = adj_mat_deserialise("3 1 0"); // (not complete)
 	ck_assert_msg(m == NULL,
-		      "Should be invalid because the matrix is not complete.");
+	              "Should be invalid because the matrix is not complete.");
 	m = adj_mat_deserialise("-2 1 0 0 1");
 	ck_assert_msg(m == NULL,
-		      "Should be invalid because the size is negative.");
+	              "Should be invalid because the size is negative.");
 }
 END_TEST
 
