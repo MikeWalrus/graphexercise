@@ -38,7 +38,9 @@ END_TEST
 
 START_TEST(test_priority_queue_basic)
 {
-	priority_queue_decrese_key(&q, 65, 1);
+	bool improved;
+	priority_queue_decrese_key(&q, 65, 1, &improved);
+	ck_assert(improved);
 	struct VertexPair min;
 	min = priority_queue_pop_min(&q);
 	ck_assert_uint_eq(min.index, 65);
@@ -53,7 +55,18 @@ START_TEST(test_priority_queue)
 				  1,  88, 45, 8,  77, 43, 26, 82, 21 };
 	size_t len = sizeof(indices_list) / sizeof(*indices_list);
 	for (size_t i = 0; i < len; i++) {
-		priority_queue_decrese_key(&q, indices_list[i], i);
+		bool improved;
+		bool result = priority_queue_decrese_key(&q, indices_list[i], i,
+							 &improved);
+		ck_assert(result == true);
+		ck_assert(improved);
+	}
+	for (size_t i = 0; i < len; i++) {
+		bool improved;
+		bool result = priority_queue_decrese_key(&q, indices_list[i], i,
+							 &improved);
+		ck_assert(result == true);
+		ck_assert(!improved);
 	}
 	for (size_t i = 0; i < len; i++) {
 		struct VertexPair min;

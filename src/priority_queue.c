@@ -1,8 +1,11 @@
 #include <limits.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "priority_queue.h"
 #include "src/vec.h"
+
+#define NOT_IN_HEAP SIZE_MAX
 
 struct PriorityQueue priority_queue_new(size_t size)
 {
@@ -75,6 +78,7 @@ struct VertexPair priority_queue_pop_min(struct PriorityQueue *q)
 	q->heap[1] = q->heap[q->size];
 	q->size--;
 	down_heap(q, 1);
+	q->indices[min.index] = NOT_IN_HEAP;
 	return min;
 }
 
@@ -93,12 +97,19 @@ static void up_heap(struct PriorityQueue *q, size_t internal_index)
 	heap[i] = elem;
 }
 
-void priority_queue_decrese_key(struct PriorityQueue *q, size_t index,
-				int new_weight)
+bool priority_queue_decrese_key(struct PriorityQueue *q, size_t index,
+				int new_weight, bool *improved)
 {
+	if (q->indices[index] == NOT_IN_HEAP)
+		return false;
+
 	size_t internal_index = q->indices[index];
 	if (new_weight < q->heap[internal_index].weight) {
 		q->heap[internal_index].weight = new_weight;
 		up_heap(q, internal_index);
+		*improved = true;
+	} else {
+		*improved = false;
 	}
+	return true;
 }
