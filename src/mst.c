@@ -74,6 +74,7 @@ struct TwoVertices *mst_kruskal(size_t graph_size, struct Vec_edge *edges,
 				                                .b = edge.b };
 		}
 	}
+	disjoint_set_delete(&disjoint_set);
 	return ret;
 }
 

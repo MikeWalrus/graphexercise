@@ -28,8 +28,9 @@ struct AdjListGraph;
 struct AdjMat *
 adj_mat_from_adj_list_graph_weighted(const struct AdjListGraph *graph);
 
-int adj_mat_edges_weight_sum(const struct AdjMat *graph,
-                             struct TwoVertices *edges, size_t edges_size);
+long long adj_mat_edges_weight_sum(const struct AdjMat *graph,
+                                   struct TwoVertices *edges,
+                                   size_t edges_size);
 
 struct Vec_edge adj_mat_undirected_get_edges(const struct AdjMat *graph);
 

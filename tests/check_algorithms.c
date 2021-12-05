@@ -127,17 +127,25 @@ const char connected_weighted_graph_1[] = "6 "
 					  "_ _ 5 _ 7 _";
 const size_t connected_weighted_graph_1_mst_weight = 16;
 
+int mst_weight(struct AdjMat *g,
+               struct TwoVertices *(*mst)(struct AdjMat *graph,
+                                          size_t *ret_size))
+{
+	size_t mst_edges_size;
+	struct TwoVertices *mst_edges = mst_kruskal_adj_mat(g, &mst_edges_size);
+	int weight = adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+	free(mst_edges);
+	return weight;
+}
+
 START_TEST(test_prim)
 {
 	struct AdjMat *g = adj_mat_deserialise(connected_weighted_graph_1);
 	ck_assert(g);
-	size_t mst_edges_size;
-	struct TwoVertices *mst_edges = mst_prim(g, &mst_edges_size);
-	int weight = adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+	int weight = mst_weight(g, mst_prim);
 	ck_assert_int_eq(weight, connected_weighted_graph_1_mst_weight);
 
 	adj_mat_delete(g);
-	free(mst_edges);
 }
 END_TEST
 
@@ -145,13 +153,24 @@ START_TEST(test_kruskal)
 {
 	struct AdjMat *g = adj_mat_deserialise(connected_weighted_graph_1);
 	ck_assert(g);
-	size_t mst_edges_size;
-	struct TwoVertices *mst_edges = mst_kruskal_adj_mat(g, &mst_edges_size);
-	int weight = adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+	int weight = mst_weight(g, mst_prim);
 	ck_assert_int_eq(weight, connected_weighted_graph_1_mst_weight);
 
 	adj_mat_delete(g);
-	free(mst_edges);
+}
+END_TEST
+
+START_TEST(test_mst)
+{
+	struct AdjListGraph *g_list =
+		graph_load(DATASET_DIR "USAir97_adj_list.txt");
+	struct AdjMat *g_mat = adj_mat_from_adj_list_graph_weighted(g_list);
+	adj_list_graph_delete(g_list);
+	ck_assert(g_mat != NULL);
+	long long weight_prim = mst_weight(g_mat, mst_prim);
+	long long weight_kruskal = mst_weight(g_mat, mst_kruskal_adj_mat);
+	ck_assert_int_eq(weight_prim, weight_kruskal);
+	adj_mat_delete(g_mat);
 }
 END_TEST
 
@@ -166,6 +185,7 @@ Suite *mst_suite(void)
 
 	tcase_add_test(tc, test_prim);
 	tcase_add_test(tc, test_kruskal);
+	tcase_add_test(tc, test_mst);
 	suite_add_tcase(s, tc);
 
 	return s;
