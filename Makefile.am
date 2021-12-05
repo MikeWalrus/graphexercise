@@ -10,7 +10,8 @@ libgraphexercise_la_SOURCES = \
 							  src/graph.h \
 							  src/traverse.c src/traverse.h \
 							  src/priority_queue.c src/priority_queue.h \
-							  src/mst.c src/mst.h
+							  src/mst.c src/mst.h \
+							  src/disjoint_set.c src/disjoint_set.h
 
 pkginclude_HEADERS = \
 					 src/adjacency_matrix.h \
@@ -19,9 +20,9 @@ pkginclude_HEADERS = \
 					 src/mst.h
 
 TESTS = check_graphexercise check_vec check_algorithms check_queue \
-		check_priority_queue
+		check_priority_queue check_disjoint_set
 check_PROGRAMS = check_graphexercise check_vec check_algorithms check_queue \
-				 check_priority_queue
+				 check_priority_queue check_disjoint_set
 
 
 
@@ -44,6 +45,10 @@ check_algorithms_LDADD = libgraphexercise.la @CHECK_LIBS@
 check_priority_queue_SOURCES = tests/check_priority_queue.c
 check_priority_queue_CFLAGS = @CHECK_CFLAGS@
 check_priority_queue_LDADD = libgraphexercise.la @CHECK_LIBS@
+
+check_disjoint_set_SOURCES = tests/check_disjoint_set.c
+check_disjoint_set_CFLAGS = @CHECK_CFLAGS@
+check_disjoint_set_LDADD = libgraphexercise.la @CHECK_LIBS@
 
 EXTRA_DIST = tests/datasets
 
