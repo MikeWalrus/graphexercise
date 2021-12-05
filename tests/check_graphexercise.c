@@ -1,3 +1,4 @@
+#include "src/vec.h"
 #include <check.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -12,6 +13,18 @@ const char mat_str_1[] = "5 "
 			 "0 _ _ _ 1 "
 			 "1 1 1 0 1 "
 			 "1 0 1 1 0";
+
+const char weighted_graph_mat_str[] = "4 "
+				      "_ 1 _ 3 "
+				      "1 _ 2 _ "
+				      "_ 2 _ 4 "
+				      "3 _ 4 _";
+
+const char weighted_graph_list_str[] = "4\n"
+				       "0 1 1 3 3\n"
+				       "1 0 1 2 2\n"
+				       "2 1 2 3 4\n"
+				       "3 0 3 2 4\n";
 
 START_TEST(test_adj_mat_deserialise)
 {
@@ -56,6 +69,16 @@ START_TEST(test_adj_mat_equality)
 }
 END_TEST
 
+START_TEST(test_adj_mat_get_edges)
+{
+	struct AdjMat *g = adj_mat_deserialise(weighted_graph_mat_str);
+	struct Vec_edge edges = adj_mat_undirected_get_edges(g);
+	ck_assert_uint_eq(edges.size, 4);
+	vec_edge_delete(&edges);
+	adj_mat_delete(g);
+}
+END_TEST
+
 Suite *adj_mat_suite(void)
 {
 	Suite *s;
@@ -68,6 +91,7 @@ Suite *adj_mat_suite(void)
 	tcase_add_test(tc_mat, test_adj_mat_deserialise);
 	tcase_add_test(tc_mat, test_adj_mat_deserialise_invalid);
 	tcase_add_test(tc_mat, test_adj_mat_equality);
+	tcase_add_test(tc_mat, test_adj_mat_get_edges);
 	suite_add_tcase(s, tc_mat);
 
 	return s;
@@ -132,6 +156,18 @@ START_TEST(test_adj_list_graph_equality)
 }
 END_TEST
 
+START_TEST(test_adj_list_get_edges)
+{
+	struct AdjMat *g = adj_mat_deserialise(weighted_graph_mat_str);
+	struct AdjListGraph *g_list = adj_list_graph_from_adj_mat_weighted(g);
+	adj_mat_delete(g);
+	struct Vec_edge edges = adj_list_graph_undirected_get_edges(g_list);
+	ck_assert_uint_eq(edges.size, 4);
+	vec_edge_delete(&edges);
+	adj_list_graph_delete(g_list);
+}
+END_TEST
+
 Suite *adj_list_suite(void)
 {
 	Suite *s = suite_create("Adjacency List");
@@ -140,22 +176,12 @@ Suite *adj_list_suite(void)
 	tcase_add_test(tc_adj_list, test_adj_list_graph_deserialise);
 	tcase_add_test(tc_adj_list, test_adj_list_graph_deserialise_invalid);
 	tcase_add_test(tc_adj_list, test_adj_list_graph_equality);
+	tcase_add_test(tc_adj_list, test_adj_list_get_edges);
 	suite_add_tcase(s, tc_adj_list);
 	return s;
 }
 
 struct AdjMat *adj_mat_graph;
-
-const char weighted_graph_mat_str[] = "4 "
-				      "_ 1 _ 3 "
-				      "1 _ 2 _ "
-				      "_ 2 _ 4 "
-				      "3 _ 4 _";
-const char weighted_graph_list_str[] = "4\n"
-				       "0 1 1 3 3\n"
-				       "1 0 1 2 2\n"
-				       "2 1 2 3 4\n"
-				       "3 0 3 2 4\n";
 
 START_TEST(test_mat_list_conversion)
 {

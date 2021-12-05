@@ -1,3 +1,4 @@
+#include "src/vec.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -161,4 +162,23 @@ struct AdjListGraph *adj_list_graph_from_adj_mat_weighted(struct AdjMat *graph)
 		}
 	}
 	return ret;
+}
+
+struct Vec_edge
+adj_list_graph_undirected_get_edges(const struct AdjListGraph *graph)
+{
+	struct Vec_edge edges = vec_edge_new();
+	for (size_t i = 0; i < graph->size; i++) {
+		const struct Vec_adj_edge *adj_edges = &graph->adj_lists[i];
+		for (size_t j = 0; j < adj_edges->size; j++) {
+			struct AdjEdge e = adj_edges->buf[j];
+			if (e.to > i) {
+				struct Edge edge = { .a = i,
+					             .b = j,
+					             .weight = e.weight };
+				vec_edge_push(&edges, edge);
+			}
+		}
+	}
+	return edges;
 }

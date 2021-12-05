@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "adjacency_list.h"
+#include "graph.h"
 #include "vec.h"
 
 #define IMPL_VEC(Type, typename)                                               \
@@ -58,3 +59,4 @@
 IMPL_VEC(struct AdjEdge, adj_edge);
 IMPL_VEC(int, int);
 IMPL_VEC(size_t, size_t);
+IMPL_VEC(struct Edge, edge);

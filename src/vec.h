@@ -30,5 +30,7 @@ struct AdjEdge;
 DECL_VEC(struct AdjEdge, adj_edge);
 DECL_VEC(int, int);
 DECL_VEC(size_t, size_t);
+struct Edge;
+DECL_VEC(struct Edge, edge);
 
 #endif

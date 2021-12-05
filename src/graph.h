@@ -8,4 +8,10 @@ struct TwoVertices {
 	size_t b;
 };
 
+struct Edge {
+	size_t a;
+	size_t b;
+	int weight;
+};
+
 #endif

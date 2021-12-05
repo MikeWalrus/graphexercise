@@ -30,4 +30,7 @@ struct AdjMat;
 
 struct AdjListGraph *adj_list_graph_from_adj_mat_weighted(struct AdjMat *graph);
 
+struct Vec_edge
+adj_list_graph_undirected_get_edges(const struct AdjListGraph *graph);
+
 #endif

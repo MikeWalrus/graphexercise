@@ -1,3 +1,4 @@
+#include "src/vec.h"
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -152,4 +153,24 @@ int adj_mat_edges_weight_sum(const struct AdjMat *graph,
 		sum += graph->edges[edge.a * graph->size + edge.b];
 	}
 	return sum;
+}
+
+struct Vec_edge adj_mat_undirected_get_edges(const struct AdjMat *graph)
+{
+	struct Vec_edge edges = vec_edge_new();
+	size_t size = graph->size;
+	for (size_t i = 0; i < size; i++) {
+		for (size_t j = i; j < size; j++) {
+			if (graph->edges[i * size + j] == INT_MAX)
+				continue;
+
+			struct Edge edge = {
+				.a = i,
+				.b = j,
+				.weight = graph->edges[i * size + j]
+			};
+			vec_edge_push(&edges, edge);
+		}
+	}
+	return edges;
 }
