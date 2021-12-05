@@ -1,9 +1,12 @@
-#include <bits/posix1_lim.h>
+#include "src/adjacency_list.h"
+#include "src/vec.h"
 #include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include "adjacency_matrix.h"
+#include "disjoint_set.h"
+#include "graph.h"
 #include "mst.h"
 #include "priority_queue.h"
 
@@ -49,5 +52,44 @@ struct TwoVertices *mst_prim(struct AdjMat *graph, size_t *ret_size)
 	}
 	free(from);
 	priority_queue_delete(&q);
+	return ret;
+}
+
+struct TwoVertices *mst_kruskal(size_t graph_size, struct Vec_edge *edges,
+                                size_t *ret_size)
+{
+	*ret_size = graph_size - 1;
+	struct TwoVertices *ret = malloc(*ret_size * sizeof(*ret));
+	struct TwoVertices *output_ptr = ret;
+
+	struct DisjointSet disjoint_set = disjoint_set_new(graph_size);
+
+	vec_edge_sort(edges, edge_compare_by_weight);
+	for (size_t i = 0; i < edges->size; i++) {
+		struct Edge edge = edges->buf[i];
+		if (!disjoint_set_is_in_same_set(&disjoint_set, edge.a,
+		                                 edge.b)) {
+			disjoint_set_union(&disjoint_set, edge.a, edge.b);
+			*(output_ptr++) = (struct TwoVertices){ .a = edge.a,
+				                                .b = edge.b };
+		}
+	}
+	return ret;
+}
+
+struct TwoVertices *mst_kruskal_adj_mat(struct AdjMat *graph, size_t *ret_size)
+{
+	struct Vec_edge edges = adj_mat_undirected_get_edges(graph);
+	struct TwoVertices *ret = mst_kruskal(graph->size, &edges, ret_size);
+	vec_edge_delete(&edges);
+	return ret;
+}
+
+struct TwoVertices *mst_kruskal_adj_list_graph(struct AdjListGraph *graph,
+                                               size_t *ret_size)
+{
+	struct Vec_edge edges = adj_list_graph_undirected_get_edges(graph);
+	struct TwoVertices *ret = mst_kruskal(graph->size, &edges, ret_size);
+	vec_edge_delete(&edges);
 	return ret;
 }

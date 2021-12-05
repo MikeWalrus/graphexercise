@@ -125,7 +125,7 @@ const char connected_weighted_graph_1[] = "6 "
 					  "4 4 _ _ 4 _ "
 					  "3 2 4 4 _ 7 "
 					  "_ _ 5 _ 7 _";
-const size_t connected_weighted_graph_1_mst_weight = 17;
+const size_t connected_weighted_graph_1_mst_weight = 16;
 
 START_TEST(test_prim)
 {
@@ -133,7 +133,22 @@ START_TEST(test_prim)
 	ck_assert(g);
 	size_t mst_edges_size;
 	struct TwoVertices *mst_edges = mst_prim(g, &mst_edges_size);
-	adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+	int weight = adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+	ck_assert_int_eq(weight, connected_weighted_graph_1_mst_weight);
+
+	adj_mat_delete(g);
+	free(mst_edges);
+}
+END_TEST
+
+START_TEST(test_kruskal)
+{
+	struct AdjMat *g = adj_mat_deserialise(connected_weighted_graph_1);
+	ck_assert(g);
+	size_t mst_edges_size;
+	struct TwoVertices *mst_edges = mst_kruskal_adj_mat(g, &mst_edges_size);
+	int weight = adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+	ck_assert_int_eq(weight, connected_weighted_graph_1_mst_weight);
 
 	adj_mat_delete(g);
 	free(mst_edges);
@@ -150,6 +165,7 @@ Suite *mst_suite(void)
 	tc = tcase_create("test");
 
 	tcase_add_test(tc, test_prim);
+	tcase_add_test(tc, test_kruskal);
 	suite_add_tcase(s, tc);
 
 	return s;

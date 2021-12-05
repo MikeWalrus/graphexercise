@@ -14,4 +14,6 @@ struct Edge {
 	int weight;
 };
 
+int edge_compare_by_weight(const void *a, const void *b);
+
 #endif
