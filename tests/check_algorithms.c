@@ -1,3 +1,4 @@
+#include "src/adjacency_matrix.h"
 #include <check.h>
 
 #include <stdbool.h>
@@ -5,6 +6,8 @@
 #include <stdlib.h>
 
 #include "../src/adjacency_list.h"
+#include "../src/adjacency_matrix.h"
+#include "../src/mst.h"
 #include "../src/traverse.h"
 
 struct AdjListGraph *graph_load(const char *filename)
@@ -98,12 +101,12 @@ START_TEST(test_bfs)
 }
 END_TEST
 
-Suite *adj_list_suite(void)
+Suite *traversal_suite(void)
 {
 	Suite *s;
 	TCase *tc;
 
-	s = suite_create("Algorithms");
+	s = suite_create("Traversal");
 
 	tc = tcase_create("test");
 
@@ -114,12 +117,50 @@ Suite *adj_list_suite(void)
 	return s;
 }
 
+// https://commons.wikimedia.org/wiki/File:Msp1.jpg
+const char connected_weighted_graph_1[] = "6 "
+					  "_ 1 _ 4 3 _ "
+					  "1 _ _ 4 2 _ "
+					  "_ _ _ _ 4 5 "
+					  "4 4 _ _ 4 _ "
+					  "3 2 4 4 _ 7 "
+					  "_ _ 5 _ 7 _";
+const size_t connected_weighted_graph_1_mst_weight = 17;
+
+START_TEST(test_prim)
+{
+	struct AdjMat *g = adj_mat_deserialise(connected_weighted_graph_1);
+	ck_assert(g);
+	size_t mst_edges_size;
+	struct TwoVertices *mst_edges = mst_prim(g, &mst_edges_size);
+	adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
+
+	adj_mat_delete(g);
+}
+END_TEST
+
+Suite *mst_suite(void)
+{
+	Suite *s;
+	TCase *tc;
+
+	s = suite_create("Minimum Spanning Tree");
+
+	tc = tcase_create("test");
+
+	tcase_add_test(tc, test_prim);
+	suite_add_tcase(s, tc);
+
+	return s;
+}
+
 int main(void)
 {
 	int number_failed;
 	SRunner *sr;
 
-	sr = srunner_create(adj_list_suite());
+	sr = srunner_create(traversal_suite());
+	srunner_add_suite(sr, mst_suite());
 
 	srunner_run_all(sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed(sr);

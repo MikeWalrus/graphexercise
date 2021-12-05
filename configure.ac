@@ -38,4 +38,7 @@ AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_FILES([Makefile])
 
+# Doxygen
+DX_INIT_DOXYGEN([graphexercise])
+
 AC_OUTPUT

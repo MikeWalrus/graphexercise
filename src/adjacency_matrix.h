@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "graph.h"
+
 struct AdjMat {
 	int *edges;
 	size_t size;
@@ -24,5 +26,8 @@ struct AdjListGraph;
 
 struct AdjMat *
 adj_mat_from_adj_list_graph_weighted(const struct AdjListGraph *graph);
+
+int adj_mat_edges_weight_sum(const struct AdjMat *graph,
+                             struct TwoVertices *edges, size_t edges_size);
 
 #endif

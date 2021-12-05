@@ -10,9 +10,13 @@ test-suite.log
 config.h
 /build_aux
 /.libs
-/m4
+!m4
+m4/*
+!m4/ax_prog_doxygen.m4
 
 /.cache
+
+/doxygen-doc
 
 # http://www.gnu.org/software/automake
 

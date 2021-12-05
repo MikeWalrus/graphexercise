@@ -142,3 +142,14 @@ adj_mat_from_adj_list_graph_weighted(const struct AdjListGraph *graph)
 	}
 	return ret;
 }
+
+int adj_mat_edges_weight_sum(const struct AdjMat *graph,
+                             struct TwoVertices *edges, size_t edges_size)
+{
+	int sum = 0;
+	for (size_t i = 0; i < edges_size; i++) {
+		struct TwoVertices edge = edges[i];
+		sum += graph->edges[edge.a * graph->size + edge.b];
+	}
+	return sum;
+}
