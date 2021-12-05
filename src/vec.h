@@ -24,7 +24,10 @@
 	void vec_##typename##_delete(struct Vec_##typename *vec);              \
                                                                                \
 	struct Vec_##typename vec_##                                           \
-		typename##_clone(const struct Vec_##typename *vec);
+		typename##_clone(const struct Vec_##typename *vec);            \
+                                                                               \
+	void vec_##typename##_sort(struct Vec_##typename *vec,                 \
+	                           int (*compar)(const void *, const void *));
 
 struct AdjEdge;
 DECL_VEC(struct AdjEdge, adj_edge);

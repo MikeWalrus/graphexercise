@@ -54,6 +54,11 @@
 		ret.buf = malloc(vec->capacity * sizeof(Type));                \
 		memcpy(vec->buf, ret.buf, vec->size * sizeof(Type));           \
 		return ret;                                                    \
+	}                                                                      \
+	void vec_##typename##_sort(struct Vec_##typename *vec,                 \
+	                           int (*compar)(const void *, const void *))  \
+	{                                                                      \
+		qsort(vec->buf, vec->size, sizeof(Type), compar);              \
 	}
 
 IMPL_VEC(struct AdjEdge, adj_edge);

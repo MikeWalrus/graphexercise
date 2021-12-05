@@ -26,7 +26,7 @@ void adj_lists_delete(struct Vec_adj_edge *adj_lists, size_t size)
 	free(adj_lists);
 }
 
-static int edge_compare(const void *a, const void *b)
+static int adj_edge_compare(const void *a, const void *b)
 {
 	const struct AdjEdge *edge1 = a;
 	const struct AdjEdge *edge2 = b;
@@ -121,10 +121,8 @@ bool adj_list_graph_is_equal(struct AdjListGraph *g1, struct AdjListGraph *g2)
 			return false;
 		if (edges_1->size == 0)
 			continue;
-		qsort(edges_1->buf, edges_1->size, sizeof(*edges_1->buf),
-		      edge_compare);
-		qsort(edges_2->buf, edges_2->size, sizeof(*edges_2->buf),
-		      edge_compare);
+		vec_adj_edge_sort(edges_1, adj_edge_compare);
+		vec_adj_edge_sort(edges_2, adj_edge_compare);
 		for (size_t j = 0; j < edges_1->size; j++) {
 			if (edges_1->buf[j].to != edges_2->buf[j].to ||
 			    edges_1->buf[j].weight != edges_2->buf[j].weight)

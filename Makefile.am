@@ -7,7 +7,7 @@ libgraphexercise_la_SOURCES = \
 							  src/vec.c src/vec.h \
 							  src/queue.c src/queue.h \
 							  src/utilities.h \
-							  src/graph.h \
+							  src/graph.c src/graph.h \
 							  src/traverse.c src/traverse.h \
 							  src/priority_queue.c src/priority_queue.h \
 							  src/mst.c src/mst.h \
