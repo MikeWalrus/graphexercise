@@ -46,6 +46,33 @@ START_TEST(test_vec_with_cap_push)
 }
 END_TEST
 
+int int_compare(const void *a, const void *b)
+{
+	int int_a = *(int *)a;
+	int int_b = *(int *)b;
+	if (int_a < int_b)
+		return -1;
+	if (int_a > int_b)
+		return 1;
+	return 0;
+}
+
+START_TEST(test_vec_sort)
+{
+	struct Vec_int v = vec_int_new();
+	int a[] = { 2, 4, 1, 43, 23, 90, 3, 23, 3, 4, 90 };
+	size_t a_len = sizeof(a) / sizeof(*a);
+	for (size_t i = 0; i < a_len; i++)
+		vec_int_push(&v, a[i]);
+	ck_assert_uint_eq(v.size, a_len);
+
+	vec_int_sort(&v, int_compare);
+	for (size_t i = 0; i < a_len - 1; i++)
+		ck_assert_int_le(v.buf[i], v.buf[i + 1]);
+	vec_int_delete(&v);
+}
+END_TEST
+
 Suite *vec_suite(void)
 {
 	Suite *s;
@@ -57,6 +84,7 @@ Suite *vec_suite(void)
 
 	tcase_add_test(tc, test_vec);
 	tcase_add_test(tc, test_vec_with_cap_push);
+	tcase_add_test(tc, test_vec_sort);
 	suite_add_tcase(s, tc);
 
 	return s;
