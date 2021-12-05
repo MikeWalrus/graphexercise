@@ -133,7 +133,7 @@ adj_mat_from_adj_list_graph_weighted(const struct AdjListGraph *graph)
 		ret->edges[i] = INT_MAX;
 	}
 	for (size_t i = 0; i < size; i++) {
-		struct Vec_edge *edges = &graph->adj_lists[i];
+		struct Vec_adj_edge *edges = &graph->adj_lists[i];
 		for (size_t j = 0; j < edges->size; j++) {
 			size_t to = edges->buf[j].to;
 			int weight = edges->buf[j].weight;

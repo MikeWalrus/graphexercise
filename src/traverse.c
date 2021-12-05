@@ -38,7 +38,7 @@ static void dfs_adj_list_graph_aux(const struct AdjListGraph *graph,
 	for (;;) {
 		size_t curr = vec_size_t_pop_back(&stack);
 		*(p++) = curr;
-		struct Vec_edge *edges = &graph->adj_lists[curr];
+		struct Vec_adj_edge *edges = &graph->adj_lists[curr];
 		for (size_t i = 0; i < edges->size; i++) {
 			size_t to = edges->buf[i].to;
 			if (visited[to])
@@ -87,7 +87,7 @@ static void bfs_adj_list_graph_aux(const struct AdjListGraph *graph,
 	for (;;) {
 		size_t curr = queue_size_t_pop_front(&queue);
 		*(p++) = curr;
-		struct Vec_edge *edges = &graph->adj_lists[curr];
+		struct Vec_adj_edge *edges = &graph->adj_lists[curr];
 		for (size_t i = 0; i < edges->size; i++) {
 			size_t to = edges->buf[i].to;
 			if (visited[to])

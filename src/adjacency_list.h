@@ -6,14 +6,14 @@
 
 #include "vec.h"
 
-struct Edge {
+struct AdjEdge {
 	size_t to;
 	int weight;
 };
 
 struct AdjListGraph {
 	size_t size;
-	struct Vec_edge *adj_lists;
+	struct Vec_adj_edge *adj_lists;
 };
 
 struct AdjListGraph *adj_list_graph_deserialise(const char *str);

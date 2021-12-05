@@ -26,8 +26,8 @@
 	struct Vec_##typename vec_##                                           \
 		typename##_clone(const struct Vec_##typename *vec);
 
-struct Edge;
-DECL_VEC(struct Edge, edge);
+struct AdjEdge;
+DECL_VEC(struct AdjEdge, adj_edge);
 DECL_VEC(int, int);
 DECL_VEC(size_t, size_t);
 
