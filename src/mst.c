@@ -48,5 +48,6 @@ struct TwoVertices *mst_prim(struct AdjMat *graph, size_t *ret_size)
 			(struct TwoVertices){ .a = from[curr], .b = curr };
 	}
 	free(from);
+	priority_queue_delete(&q);
 	return ret;
 }

@@ -136,6 +136,7 @@ START_TEST(test_prim)
 	adj_mat_edges_weight_sum(g, mst_edges, mst_edges_size);
 
 	adj_mat_delete(g);
+	free(mst_edges);
 }
 END_TEST
 
