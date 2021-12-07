@@ -8,6 +8,7 @@
 #include "../src/adjacency_list.h"
 #include "../src/adjacency_matrix.h"
 #include "../src/mst.h"
+#include "../src/shortest_path.h"
 #include "../src/traverse.h"
 
 struct AdjListGraph *graph_load(const char *filename)
@@ -118,14 +119,28 @@ Suite *traversal_suite(void)
 }
 
 // https://commons.wikimedia.org/wiki/File:Msp1.jpg
-const char connected_weighted_graph_1[] = "6 "
-					  "_ 1 _ 4 3 _ "
-					  "1 _ _ 4 2 _ "
-					  "_ _ _ _ 4 5 "
-					  "4 4 _ _ 4 _ "
-					  "3 2 4 4 _ 7 "
-					  "_ _ 5 _ 7 _";
+const char connected_weighted_graph_1_str[] = "6 "
+					      "_ 1 _ 4 3 _ "
+					      "1 _ _ 4 2 _ "
+					      "_ _ _ _ 4 5 "
+					      "4 4 _ _ 4 _ "
+					      "3 2 4 4 _ 7 "
+					      "_ _ 5 _ 7 _";
 const size_t connected_weighted_graph_1_mst_weight = 16;
+
+struct AdjMat *connected_weighted_graph_1;
+
+void connected_weighted_graph_1_init(void)
+{
+	connected_weighted_graph_1 =
+		adj_mat_deserialise(connected_weighted_graph_1_str);
+	ck_assert(connected_weighted_graph_1);
+}
+
+void connected_weighted_graph_1_delete(void)
+{
+	adj_mat_delete(connected_weighted_graph_1);
+}
 
 int mst_weight(struct AdjMat *g,
                struct TwoVertices *(*mst)(struct AdjMat *graph,
@@ -140,54 +155,109 @@ int mst_weight(struct AdjMat *g,
 
 START_TEST(test_prim)
 {
-	struct AdjMat *g = adj_mat_deserialise(connected_weighted_graph_1);
-	ck_assert(g);
-	int weight = mst_weight(g, mst_prim);
+	int weight = mst_weight(connected_weighted_graph_1, mst_prim);
 	ck_assert_int_eq(weight, connected_weighted_graph_1_mst_weight);
-
-	adj_mat_delete(g);
 }
 END_TEST
 
 START_TEST(test_kruskal)
 {
-	struct AdjMat *g = adj_mat_deserialise(connected_weighted_graph_1);
-	ck_assert(g);
-	int weight = mst_weight(g, mst_prim);
+	int weight = mst_weight(connected_weighted_graph_1, mst_prim);
 	ck_assert_int_eq(weight, connected_weighted_graph_1_mst_weight);
-
-	adj_mat_delete(g);
 }
 END_TEST
 
+struct AdjMat *connected_weighted_graph_real;
+
+void connected_weighted_graph_real_load(void)
+{
+	struct AdjListGraph *tmp =
+		graph_load(DATASET_DIR "USAir97_adj_list.txt");
+	ck_assert(tmp);
+	connected_weighted_graph_real =
+		adj_mat_from_adj_list_graph_weighted(tmp);
+	ck_assert(connected_weighted_graph_real);
+	adj_list_graph_delete(tmp);
+}
+
+void connected_weighted_graph_real_delete(void)
+{
+	adj_mat_delete(connected_weighted_graph_real);
+}
+
 START_TEST(test_mst)
 {
-	struct AdjListGraph *g_list =
-		graph_load(DATASET_DIR "USAir97_adj_list.txt");
-	struct AdjMat *g_mat = adj_mat_from_adj_list_graph_weighted(g_list);
-	adj_list_graph_delete(g_list);
-	ck_assert(g_mat != NULL);
-	long long weight_prim = mst_weight(g_mat, mst_prim);
-	long long weight_kruskal = mst_weight(g_mat, mst_kruskal_adj_mat);
+	long long weight_prim =
+		mst_weight(connected_weighted_graph_real, mst_prim);
+	long long weight_kruskal =
+		mst_weight(connected_weighted_graph_real, mst_kruskal_adj_mat);
 	ck_assert_int_eq(weight_prim, weight_kruskal);
-	adj_mat_delete(g_mat);
 }
 END_TEST
 
 Suite *mst_suite(void)
 {
 	Suite *s;
-	TCase *tc;
+	TCase *tc_basic;
+	TCase *tc_real;
 
 	s = suite_create("Minimum Spanning Tree");
 
-	tc = tcase_create("test");
+	tc_basic = tcase_create("basic");
+	tcase_add_checked_fixture(tc_basic, connected_weighted_graph_1_init,
+	                          connected_weighted_graph_1_delete);
+	tcase_add_test(tc_basic, test_prim);
+	tcase_add_test(tc_basic, test_kruskal);
 
-	tcase_add_test(tc, test_prim);
-	tcase_add_test(tc, test_kruskal);
-	tcase_add_test(tc, test_mst);
-	suite_add_tcase(s, tc);
+	tc_real = tcase_create("real");
+	tcase_add_checked_fixture(tc_real, connected_weighted_graph_real_load,
+	                          connected_weighted_graph_real_delete);
+	tcase_add_test(tc_real, test_mst);
 
+	suite_add_tcase(s, tc_basic);
+	suite_add_tcase(s, tc_real);
+	return s;
+}
+
+START_TEST(test_dijkstra)
+{
+	struct ShortestPathResult *r =
+		shortest_path_dijkstra(connected_weighted_graph_1, 0);
+	struct ShortestPathResult expected[6];
+	expected[0].weight = 0;
+	expected[1].weight = 1;
+	expected[2].weight = 7;
+	expected[3].weight = 4;
+	expected[4].weight = 3;
+	expected[5].weight = 10;
+	for (size_t i = 0; i < 6; i++)
+		ck_assert_int_eq(expected[i].weight, r[i].weight);
+	free(r);
+}
+END_TEST
+
+START_TEST(test_floyd_warshall)
+{
+	struct ShortestPathResult *r =
+		shortest_path_floyd_warshall(connected_weighted_graph_1);
+	free(r);
+}
+END_TEST
+
+Suite *shortest_path_suite(void)
+{
+	Suite *s;
+	TCase *tc_basic;
+
+	s = suite_create("Shortest Path");
+
+	tc_basic = tcase_create("basic");
+	tcase_add_checked_fixture(tc_basic, connected_weighted_graph_1_init,
+	                          connected_weighted_graph_1_delete);
+	tcase_add_test(tc_basic, test_dijkstra);
+	tcase_add_test(tc_basic, test_floyd_warshall);
+
+	suite_add_tcase(s, tc_basic);
 	return s;
 }
 
@@ -198,6 +268,7 @@ int main(void)
 
 	sr = srunner_create(traversal_suite());
 	srunner_add_suite(sr, mst_suite());
+	srunner_add_suite(sr, shortest_path_suite());
 
 	srunner_run_all(sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed(sr);

@@ -15,7 +15,7 @@ void prim_update_adjacent_vertices(size_t curr, struct AdjMat *graph,
 {
 	size_t size = graph->size;
 	for (size_t vertex = 0; vertex < size; vertex++) {
-		size_t weight = graph->edges[curr * size + vertex];
+		int weight = graph->edges[curr * size + vertex];
 		bool is_adjacent = weight != INT_MAX;
 		if (is_adjacent) {
 			bool improved;

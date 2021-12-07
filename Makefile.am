@@ -11,20 +11,20 @@ libgraphexercise_la_SOURCES = \
 							  src/traverse.c src/traverse.h \
 							  src/priority_queue.c src/priority_queue.h \
 							  src/mst.c src/mst.h \
-							  src/disjoint_set.c src/disjoint_set.h
+							  src/disjoint_set.c src/disjoint_set.h \
+							  src/shortest_path.c src/shortest_path.h
 
 pkginclude_HEADERS = \
 					 src/adjacency_matrix.h \
 					 src/adjacency_list.h \
 					 src/traverse.h \
-					 src/mst.h
+					 src/mst.h \
+					 src/shortest_path.h
 
 TESTS = check_graphexercise check_vec check_algorithms check_queue \
 		check_priority_queue check_disjoint_set
 check_PROGRAMS = check_graphexercise check_vec check_algorithms check_queue \
 				 check_priority_queue check_disjoint_set
-
-
 
 check_graphexercise_SOURCES = tests/check_graphexercise.c
 check_graphexercise_CFLAGS = @CHECK_CFLAGS@
